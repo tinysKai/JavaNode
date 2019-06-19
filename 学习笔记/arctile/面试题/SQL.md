@@ -10,7 +10,7 @@
         
          
 >数据库         
-![SQL的关联关系](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709//SQL_JOIN.png)
+![SQL的关联关系](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709//SQL_JOIN.png)
 
 >写SQL的原则
 + 少关联,让关系数据库无关联

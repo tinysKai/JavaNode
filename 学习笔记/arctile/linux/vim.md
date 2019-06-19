@@ -6,7 +6,7 @@
     n<Enter> : 光标向下移动 n 行(常用)
 
 >整体操作指南  
-![xargs](https://github.com/tinysKai/JavaNote/blob/master/image/settle/vim.png)
+![xargs](https://github.com/tinysKai/JavaNode/blob/master/image/settle/vim.png)
 
 >按时间回退文件  
 

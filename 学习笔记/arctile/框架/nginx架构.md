@@ -2,7 +2,7 @@
 通过异步非阻塞的事件处理机制，Nginx实现由进程循环处理多个准备好的事件，从而实现高并发和轻量级。
 
 #### nginx内部进程模型
-![b+tree](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/nginx.jpg)  
+![b+tree](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/nginx.jpg)  
 master的职责
 + 接收外部事件,向worker分派任务
 + 监控,管理worker

@@ -1,6 +1,6 @@
 # Spring cloud微服务实战学习笔记
 
-![springCloud](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/1012/2018101601.png)
+![springCloud](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/1012/2018101601.png)
 
 ## 服务治理 Eureka
 

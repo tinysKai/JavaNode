@@ -9,7 +9,7 @@ Elasticsearch ⇒ 索引 ⇒ 类型 ⇒ 文档 ⇒ 字段(Fields)
 
 
 #### Lucene抽象架构
-![Lucene](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/lucence.jpg)
+![Lucene](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/lucence.jpg)
 
 #### Lucene数据模型
 + Index：索引，由很多的Document组成。
@@ -35,7 +35,7 @@ Elasticsearch ⇒ 索引 ⇒ 类型 ⇒ 文档 ⇒ 字段(Fields)
 
 以上两个选项共能组成4种不同的节点类型.既非master又非data的节点充当着proxy节点可负责转发请求  
 
-![node](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/es-node.jpg)
+![node](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/es-node.jpg)
 
 
 #### ES选主
@@ -79,7 +79,7 @@ ES写入流程为先写入Primary，再并发写入Replica，最后应答客户�
 
 #### ES写入
 >写入请求到达Shard后，先写Lucene文件，创建好索引，此时索引还在内存里面，接着去写TransLog，写完TransLog后，刷新TransLog数据到磁盘上，写磁盘成功后，请求返回给用户
-![es](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/es-flush.jpg)      
+![es](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/es-flush.jpg)      
 ```
 这里有几个关键点，
 一是和数据库不同，数据库是先写CommitLog，然后再写内存，而Elasticsearch是先写内存，最后才写TransLog，一种可能的原因是Lucene的内存写入会有很复杂的逻辑，很容易失败，比如分词，字段长度超过限制等，比较重，为了避免TransLog中有大量无效记录，减少recover的复杂度和提高速度，所以就把写Lucene放在了最前面。
@@ -90,11 +90,11 @@ ES写入流程为先写入Primary，再并发写入Replica，最后应答客户�
 
 
 #### 在集群内部创建,更新,删除请求的过程
-![es](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/es1.png)
+![es](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/es1.png)
 
 
 #### 在集群内部查询的请求过程
-![es](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/es2.png)
+![es](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/es2.png)
 
 
 
@@ -117,11 +117,11 @@ es针对倒排索引的优化
 + 为上面的filed排序再做查找索引(所以是先使用内存定位field值的大概位置,然后再到磁盘的倒排索引去查询)
 + 压缩倒排索引中主键的值(旧版本使用bitmap方式,新版本使用Roaring bitmaps模式[商,余数]方式)  
 
-![index](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/index.png)  
+![index](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/index.png)  
 
-![index](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/indexid.png)  
+![index](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/indexid.png)  
 
-![index](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/indexid2.png)
+![index](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/indexid2.png)
 
 *https://neway6655.github.io/elasticsearch/2015/09/11/elasticsearch-study-notes.html*
 

@@ -97,7 +97,7 @@ for (Transaction transaction : transactions) {
 ### Lambda
 
 #### Lambda结构
-![lambda](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/lambda.png)
+![lambda](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/lambda.png)
 
 ```
 //匿名函数

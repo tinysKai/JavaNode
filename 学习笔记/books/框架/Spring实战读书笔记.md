@@ -50,7 +50,7 @@ bean工厂太简单低级了,一般情况下都会使用**应用上下文**.
 
 **spring框架结构**
 
-![spring](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/spring090901.png)
+![spring](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/spring090901.png)
 
 
 

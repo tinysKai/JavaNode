@@ -1,5 +1,5 @@
 #### mysql内部结构图
-![mysql](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709//mysql.jpg)  
+![mysql](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709//mysql.jpg)  
 + Connectors：连接器。接收不同语言的Client交互
 + Management Service & Utilities：系统管理和控制工具
 + Connection Pool: 连接池。管理用户连接
@@ -10,7 +10,7 @@
 + Engine：存储引擎。MySQL数据最后组织并存储成具体文件
 
 #### mysql查询流程
-![mysql](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709//mysql1.PNG)    
+![mysql](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709//mysql1.PNG)    
 
 MySQL整个查询执行过程
 + 客户端向MySQL服务器发送一条查询请求

@@ -3,7 +3,7 @@
 + 全量同步后的增量同步
 
 #### 全量同步
-![btree](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709//redisS.png)
+![btree](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709//redisS.png)
 
 #### 增量同步 
 增量复制的过程主要是主服务器每执行一个写命令就会向从服务器发送相同的写命令，从服务器接收并执行收到的写命令

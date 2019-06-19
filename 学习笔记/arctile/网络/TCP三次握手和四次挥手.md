@@ -1,8 +1,8 @@
 #### TCP三次握手
-![tcp](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/tcp-3.gif)
+![tcp](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/tcp-3.gif)
 
 #### TCP传输
-![tcp](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/tcp-4.gif)  
+![tcp](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/tcp-4.gif)  
 
 TCP链接是双工的.双方都可以主动发起数据传输。  
 不过无论是哪方喊话，都需要收到对方的确认(ack)才能认为对方收到了自己的喊话。
@@ -11,7 +11,7 @@ TCP链接是双工的.双方都可以主动发起数据传输。
 
 
 #### TCP四次挥手
-![tcp](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/tcp-5.gif)  
+![tcp](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/tcp-5.gif)  
 
 TCP挥手需要四次一个主要原因是因为服务方接收关闭请求时无法立刻关闭连接(可能还有需回复给接收方的消息),  
 故先回复一个收到关闭请求的应答,待确实关闭了连接时再发送fin信号  

@@ -43,7 +43,7 @@ struct SDS {
 
 SDS 结构体中的 content 中的字符串是以字节\0结尾的字符串，  
 之所以多出这样一个字节，是为了便于直接使用 glibc 的字符串处理函数，以及为了便于字符串的调试打印输出。  
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis082701.png) 
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis082701.png) 
  
 ##### 扩容策略
  字符串在长度小于 1M 之前，扩容空间采用加倍策略，也就是保留 100% 的冗余空间。  
@@ -80,7 +80,7 @@ struct zset {
 dict 结构内部包含两个 hashtable，通常情况下只有一个 hashtable 是有值的
 但是在 dict 扩容缩容时，需要分配新的 hashtable，然后进行渐进式搬迁，这时候两个 hashtable 存储的分别是旧的 hashtable 和新的 hashtable。  
 待搬迁结束后，旧的 hashtable 被删除，新的 hashtable 取而代之.
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis082702.png)  
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis082702.png)  
  
 所以，字典数据结构的精华就落在了 hashtable 结构上了。hashtable 的结构和 Java 的 HashMap 几乎是一样的，都是通过分桶的方式解决 hash 冲突。  
 第一维是数组，第二维是链表。数组中存储的是第二维链表的第一个元素的指针。
@@ -101,7 +101,7 @@ struct dictht {
 ```
 
 结构图  
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis082703.png)
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis082703.png)
 
 ##### 渐进式rehash
 大字典的扩容是比较耗时间的，需要重新申请新的数组，然后将旧字典所有链表中的元素重新挂接到新的数组下面   
@@ -130,7 +130,7 @@ struct entry {
 ```
 
 结构图  
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis082801.png)  
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis082801.png)  
 
 ##### 增加元素
 因为 ziplist 都是紧凑存储，没有冗余空间 (对比一下 Redis 的字符串结构)。  
@@ -152,7 +152,7 @@ struct intset<T> {
 }
 ```
 结构图  
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis082802.png)  
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis082802.png)  
 
 
 ### 快速列表
@@ -166,7 +166,7 @@ Redis 早期版本存储 list 列表数据结构使用的是压缩列表 ziplist
 quicklist 是 ziplist 和 linkedlist 的混合体，它将 linkedlist 按段切分，每一段使用 ziplist 来紧凑存储，多个 ziplist 之间使用双向指针串接起来。
 
 结构图  
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis082803.png)    
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis082803.png)    
 
 ```
 struct ziplist {
@@ -207,7 +207,7 @@ zset 的内部实现是一个 hash 字典加一个跳跃列表 (skiplist)。
 
 
 ### 紧凑列表-listpack
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis090101.png)   
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis090101.png)   
 
 
 结构
@@ -268,12 +268,12 @@ typedef struct redisObject {
 如果超过了，说明server.lruclock折返了。通过这个逻辑就可以精准计算出对象多长时间没有被访问——对象的空闲时间。  
 
 计算规则  
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis090102.png)   
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis090102.png)   
   
   
 ##### LFU
 在 LFU 模式下，lru 字段 24 个 bit 用来存储两个值，分别是ldt(last decrement time)和logc(logistic counter)。  
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis090103.png)  
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis090103.png)  
 
      
 logc 是 8 个 bit，用来存储访问频次，因为 8 个 bit 能表示的最大整数值为 255，存储频次肯定远远不够，  
@@ -281,7 +281,7 @@ logc 是 8 个 bit，用来存储访问频次，因为 8 个 bit 能表示的最
 为了确保新创建的对象不被回收，新对象的这 8 个 bit 会初始化为一个大于零的值，默认是LFU_INIT_VAL=5.  
      
 计算空闲时间(单位分钟)  
-![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis090104.png)  
+![redis](https://github.com/tinysKai/JavaNode/blob/master/image/article/2018/0709/redis090104.png)  
      
 更新ldt的时机  
 + LRU : 在每次访问时更新更新lru
