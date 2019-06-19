@@ -49,7 +49,7 @@ free -m
 ```
 history n //列出最近n笔的历史命令
 ```
-![history](https://github.com/tinysKai/Note/blob/master/image/settle/history.png)
+![history](https://github.com/tinysKai/JavaNote/blob/master/image/settle/history.png)
 
 >linux上登录MySQL : mysql -h 127.0.0.1 -u mysql -p
 
@@ -64,10 +64,10 @@ history n //列出最近n笔的历史命令
     解压 : tar -zxv -f filename.tar.gz  [-C 解压的地址] 
     查看 : tar -ztv -f filename.tar,gz
     
-![tar-](https://github.com/tinysKai/Note/blob/master/image/settle/tar-.png)    
+![tar-](https://github.com/tinysKai/JavaNote/blob/master/image/settle/tar-.png)    
      
 >tar仅解压单一文件的方法
-![tar](https://github.com/tinysKai/Note/blob/master/image/settle/tar.png)
+![tar](https://github.com/tinysKai/JavaNote/blob/master/image/settle/tar.png)
 
 
 >grep的用法  
@@ -76,7 +76,7 @@ grep -w word file  -w选项指定要搜索的单词
 
 >grep-搜索在文件中包含某字符串的文件名  
 grep -l "string" filename  
-![tar](https://github.com/tinysKai/Note/blob/master/image/settle/grep-l.png)
+![tar](https://github.com/tinysKai/JavaNote/blob/master/image/settle/grep-l.png)
 
 >添加用户 
 
@@ -118,13 +118,13 @@ scp -r local_folder remote_username@remote_ip:remote_folder
 
 
 >xargs  
-![xargs](https://github.com/tinysKai/Note/blob/master/image/settle/xargs.png)
+![xargs](https://github.com/tinysKai/JavaNote/blob/master/image/settle/xargs.png)
 
 >通过进程号查找对应的启动路径
-![xargs](https://github.com/tinysKai/Note/blob/master/image/settle/proc.png)
+![xargs](https://github.com/tinysKai/JavaNote/blob/master/image/settle/proc.png)
 
 ps -ef |grep redis | grep -v grep | awk '{print "/proc/"$2}' | xargs ls -al | grep exe
-![xargs](https://github.com/tinysKai/Note/blob/master/image/settle/proc1.png)
+![xargs](https://github.com/tinysKai/JavaNote/blob/master/image/settle/proc1.png)
 
 >找出当前系统cpu使用量较高的进程  
  ps -ef | sort -rnk 4 |head -10   

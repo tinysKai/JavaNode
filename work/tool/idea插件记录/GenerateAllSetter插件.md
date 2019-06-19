@@ -10,4 +10,4 @@
 
 在声明完对象之后使用快捷键"alt + enter"调出"Generate Al l Setter"菜单
 
-![code](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/GenerateAllSetter.gif)
+![code](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/GenerateAllSetter.gif)

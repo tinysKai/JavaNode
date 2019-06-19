@@ -15,5 +15,5 @@
 
 #### 演示
 
-![translation](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/translate.gif)
+![translation](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/translate.gif)
 

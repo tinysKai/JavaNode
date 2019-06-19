@@ -8,11 +8,11 @@
 + 数据链路层 : 处理连接网络的硬件部分.包括控制操作系统、硬件的设备驱,网卡等.硬件上的范畴都在链路层的作用范围之内
 
 TCP/IP通信传输流  
-![tcp](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/tcp01.png) 
+![tcp](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/tcp01.png) 
 
  
 数据信息封装  
-![tcp](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/tcp02.png)   
+![tcp](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/tcp02.png)   
 
 URI用字符串标识某一互联网资源,而URL表示资源的地点.可见 URL 是 URI 的子集.
 
@@ -22,12 +22,12 @@ URI用字符串标识某一互联网资源,而URL表示资源的地点.可见 UR
 ##### HTTP报文
 请求报文是由请求方法、请求 URI、协议版本、可选的请求首部字段和内容实体构成的。  
   
-![http](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/http01.png)  
+![http](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/http01.png)  
  
  
 响应报文基本上由协议版本、状态码（表示请求成功或失败的数字代码）、用以解释状态码的原因短语、可选的响应首部字段以及实体主体构成。  
 
-![http](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/http02.png)    
+![http](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/http02.png)    
 
 
 HTTP 是一种不保存状态，即无状态（stateless）协议.  
@@ -68,7 +68,7 @@ HTTP 是一种不保存状态，即无状态（stateless）协议.
 
 #### web服务器
 网关
-![http](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/http03.png)   
+![http](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/http03.png)   
 网关能使通信线路上的服务器提供非 HTTP 协议服务。  
 利用网关能提高通信的安全性，因为可以在客户端与网关之间的通信线路上加密以确保连接的安全
   
@@ -143,11 +143,11 @@ HTTP通过和 SSL（Secure Socket Layer，安全套接层）或TLS（Transport L
 在采用 SSL 后，HTTP 就拥有了 HTTPS 的加密、证书和完整性保护这些功能。
 
 ##### 服务端发布公钥流程
-![http](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/http04.png)     
-![http](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/http05.png)     
+![http](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/http04.png)     
+![http](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/http05.png)     
 
 ##### https交互流程
-![http](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/http06.png)
+![http](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/http06.png)
 
 
 #### 身份认证
@@ -158,7 +158,7 @@ HTTP认证方式
 + FormBase认证(基于表单认证)  
 
 SSL认证  
-![http](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/http07.png)
+![http](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/http07.png)
 
 
 #### WebSocket
@@ -174,5 +174,5 @@ WebSocket主要特点
 为了实现WebSocket通信，在HTTP连接建立之后，需要完成一次“握手”（Handshaking）的步骤。  
 为了实现WebSocket通信，需要用到HTTP的Upgrade首部字段，告知服务器通信协议发生改变，以达到握手的目的。  
 成功握手确立 WebSocket 连接之后，通信时不再使用HTTP的数据帧，而采用 WebSocket 独立的数据帧。  
-![http](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/websocket01.png)
+![http](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/websocket01.png)
  

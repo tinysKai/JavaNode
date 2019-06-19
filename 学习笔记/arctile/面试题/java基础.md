@@ -207,7 +207,7 @@ threshold = (int)(capacity * loadFactor);
 + list的个数小于20000个(由于并发两个线程对同一个位置进行赋值导致)
 
 >线程池参数
-![线程池配置](https://github.com/tinysKai/Note/blob/master/image/article/java/poll.png)
+![线程池配置](https://github.com/tinysKai/JavaNote/blob/master/image/article/java/poll.png)
 
 
 
@@ -217,7 +217,7 @@ threshold = (int)(capacity * loadFactor);
 + 数据一致性问题(只确保最终一致性)
 
 >各种map的null问题
-![map的null解析](https://github.com/tinysKai/Note/blob/master/image/article/java/map_null.png)
+![map的null解析](https://github.com/tinysKai/JavaNote/blob/master/image/article/java/map_null.png)
 
 
 #### 超时时间

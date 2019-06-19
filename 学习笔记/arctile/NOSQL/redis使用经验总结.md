@@ -9,7 +9,7 @@
 #### 建议使用多参数命令（multi-argument commands）
 使用多参数命令主要的有点是可以减少redis的响应延迟。redis单进程响应所有连接的操作请求，队列中最近的命令需要等待之前所有的命令完成才能开始执行。   
 
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redisM.png)  
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redisM.png)  
 
 例如，需要添加1000个元素到一个list中，使用lset需要1000次请求，使用lpush/rpush只需要一次请求。
 需要注意的是，当操作的数据量过大的时候，容易阻塞其它连接的操作。

@@ -12,7 +12,7 @@
 Redis的字符串是动态字符串，是可以修改的字符串，内部结构实现上类似于Java的ArrayList,采用预分配冗余空间的方式来减少内存的频繁分配，  
 如图中所示，内部为当前字符串实际分配的空间capacity一般要高于实际字符串长度len。当字符串长度小于1M时，扩容都是加倍现有的空间，如果超过1M，扩容时一次只会多扩1M的空间。需要注意的是字符串最大长度为512M。  
 
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redis0801.png)
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis0801.png)
 
 
 #### Redis位图常见命令
@@ -53,7 +53,7 @@ Redis的字符串是动态字符串，是可以修改的字符串，内部结构
 
 布隆过滤器对应到Redis的数据结构里面就是一个大型的位数组和几个不一样的无偏hash函数。所谓无偏就是能够把元素的hash值算得比较均匀  
 
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redis0802.png)
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis0802.png)
 
 添加时  
 
@@ -244,7 +244,7 @@ limit参数就表示需要遍历的槽位数，之所以返回的结果可能多
 
 >字典扩容  
 
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redis0804.png)    
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis0804.png)    
 
 假设当前的字典的数组长度由8位扩容到16位，那么3号槽位011将会被rehash到3号槽位和11号槽位，   
 也就是说该槽位链表中大约有一半的元素还是3号槽位，其它的元素会放到11号槽位，  
@@ -257,7 +257,7 @@ limit参数就表示需要遍历的槽位数，之所以返回的结果可能多
 之所以使用这样特殊的方式进行遍历，是考虑到字典的扩容和缩容时避免槽位的遍历重复和遗漏。   
  
 
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redis0803.png)  
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis0803.png)  
 
 观察这张图，我们发现采用高位进位加法的遍历顺序，rehash 后的槽位在遍历顺序上是相邻的。
 
@@ -330,7 +330,7 @@ SET: 102354.15 requests per second...
 ```
 
 >redis请求交互流程图  
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redis0805.png)  
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis0805.png)  
 
 流程解释  
  I.发送指令 : redis在客户端是先写内核缓冲,操作系统将缓冲内容经网卡经网络发送到服务端网卡,服务端网卡将数据发送到内核缓存,redis服务进程将数据从缓冲读出 ..
@@ -351,7 +351,7 @@ jedis代码实例
 ![redis](http://group.store.qq.com/qun/V10dOswR3Unu71/V3tNZ1gH5N941mkvtkm/800?w5=1162&h5=640&rf=viewer_421)
 
 redis事务的交互图  
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redis0806.png)  
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis0806.png)  
 
 redis事务的串行化  
 redis的事务不保证原子性,只保证隔离性(当前执行的事务有着不被其它事务打断的权利)
@@ -408,7 +408,7 @@ redis对内部小的集合数据结构都使用ziplist来压缩存储.
 Redis 的 intset 是一个紧凑的整数数组结构，它用于存放元素都是整数的并且元素个数较少的set集合。  
 
 ziplist的数据结构  
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redis0807.png)  
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis0807.png)  
 + 如果它存储的是 hash 结构，那么 key 和 value 会作为两个 entry 相邻存在一起  
 + 如果它存储的是 zset，那么 value 和 score 会作为两个 entry 相邻存在一起
 
@@ -442,7 +442,7 @@ Redis 的主从数据是异步同步的，所以分布式的 Redis 系统并不�
 redis5.0的最大的新特性就是多了一个Stream数据结构    
 它是一个新的强大的支持多播的可持久化的消息队列，作者坦言Stream狠狠地借鉴了Kafka的设计
 
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redis081601.png)    
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis081601.png)    
 Redis Stream 的结构如上图所示，它有一个消息链表，将所有加入的消息都串起来，每个消息都有一个唯一的ID和对应的内容。消息是持久化的，Redis重启后，内容还在
 
 结构  
@@ -457,7 +457,7 @@ Redis Stream 的结构如上图所示，它有一个消息链表，将所有加�
 + del
 
 消费者组  
-![redis](https://github.com/tinysKai/Note/blob/master/image/article/2018/0709/redis081602.png)    
+![redis](https://github.com/tinysKai/JavaNote/blob/master/image/article/2018/0709/redis081602.png)    
   
   
 #### INFO指令
