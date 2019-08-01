@@ -142,3 +142,6 @@ cat /etc/profile  |  cat ~/.profile   |  cat ~/.bashrc
 
 >删除文件时注意事项
 删除软链接时要特别注意,在软链接后面不能加"/"
+
+>ls文件时排序
+ls lrt
