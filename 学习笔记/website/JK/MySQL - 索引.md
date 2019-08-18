@@ -9,7 +9,7 @@
 + 主键索引(聚簇索引),主键索引的叶子节点存储的是整行的数据
 + 非主键索引(二级索引),非主键索引的叶子节点存储的是对应主键的值
 
-![ehKiLQ.png](https://s2.ax1x.com/2019/08/06/ehKiLQ.png)
+![https://s2.ax1x.com/2019/08/06/ehKiLQ.png](http://ww1.sinaimg.cn/large/8bb38904ly1g61t6econhj20vq0nsn1h.jpg)
 
 #### 索引维护
 
@@ -65,7 +65,11 @@ change buffer适合于写多读少的业务,因为缓存的写数据越多,收�
 
 #### redo log && change buffer
 
-redo log 主要节省的是随机写磁盘的 IO 消耗（转成顺序写），而 change buffer 主要节省的则是随机读磁盘的 IO 消耗(更新数据时不使用change buffer需将磁盘数据加载到内存)。
+​	redo log 主要节省的是随机写磁盘的 IO 消耗（转成顺序写），而 change buffer 主要节省的则是随机读磁盘的 IO 消耗(更新数据时不使用change buffer需将磁盘数据加载到内存)。
+
+​	`redo log`的作用是用于保证`crash safe`,正常情况下数据的最终落盘跟redo log没关系.如果是正常运行的实例的话，数据页被修改以后，跟磁盘的数据页不一致，称为脏页。最终数据落盘，就是把内存中的数据页写盘。这个过程，甚至与 redo log 毫无关系。在崩溃恢复场景中，InnoDB 如果判断到一个数据页可能在崩溃恢复的时候丢失了更新，就会将它读到内存，然后让 redo log 更新内存内容。更新完成后，内存页变成脏页，就回到了第一种情况的状态。
+
+​	`change buffer`解决的问题就是在**内存**中无对应的数据页时,先将更新操作缓存到`change buffer`中,稍后读取时再将缓存中的数据更新回去.
 
 #### 修正索引
 

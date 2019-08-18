@@ -81,3 +81,33 @@ GTID 的全称是 Global Transaction Identifier，也就是全局事务 ID，是
 从效果上看，GTID 往往是连续的，因此我们用 gno 来表示更容易理解。
 
 GTID 模式的启动也很简单，我们只需要在启动一个 MySQL 实例的时候，加上参数 gtid_mode=on 和 enforce_gtid_consistency=on 就可以了。
+
+
+
+#### 查看命令
+
+```sql
+-- 搜数据库隔离级别
+select @@global.tx_isolation;
+-- 搜数据库隔离级别
+select @@tx_isolation;
+
+--查看你的mysql当前默认的存储引擎:
+show variables like '%storage_engine%';
+
+-- 当前运行的所有事务
+select * from information_schema.innodb_trx;
+-- 当前出现的锁
+select * from information_schema.innodb_locks;
+-- 锁等待的对应关系
+select * from information_schema.innodb_lock_waits;
+
+-- show processlist结果筛选
+SELECT ID,USER,HOST,DB,command,TIME,state,info FROM information_schema.processlist
+	WHERE DB LIKE '%${databaseName}%';
+
+--查询指定数据库以及状态
+SELECT ID,USER,HOST,DB,command,TIME,state,info FROM information_schema.processlist 
+	WHERE DB LIKE '%${databaseName}%' AND state LIKE "%Lock%";
+```
+

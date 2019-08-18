@@ -6,7 +6,7 @@ MySQL架构主体分为服务层以及存储引擎层.
 
 Server 层涵盖 MySQL 的大多数核心服务功能，以及所有的内置函数（如日期、时间、数学和加密函数等），所有跨存储引擎的功能都在这一层实现，比如存储过程、触发器、视图等。而存储引擎层负责数据的存储和提取。其架构模式是插件式的，支持 InnoDB、MyISAM、Memory 等多个存储引擎。
 
-![e2Sc38.png](https://s2.ax1x.com/2019/08/05/e2Sc38.png)
+![https://s2.ax1x.com/2019/08/05/e2Sc38.png](http://ww1.sinaimg.cn/large/8bb38904gy1g5zhrd8tlej21hc140tpc.jpg)
 
 #### 查询缓存
 
@@ -37,7 +37,7 @@ WAL能提高写速度是收益于
 
 InnoDB 的 redo log 是固定大小的，比如可以配置为一组 4 个文件，每个文件的大小是 1GB，那么总共就可以记录 4GB 的操作。从头开始写，写到末尾就又回到开头循环写，如下面这个图所示。
 
-![e2V9PJ.png](https://s2.ax1x.com/2019/08/05/e2V9PJ.png)
+![<https://s2.ax1x.com/2019/08/05/e2V9PJ.png>](http://ww1.sinaimg.cn/large/8bb38904gy1g5zhqf2ovej20vq0nsdj5.jpg))
 
 `write pos` 是当前记录的位置,`checkpoint`是当前要擦除的位置.`write pos`和 `checkpoint `之间的是还空着的部分，可以用来记录新的操作。
 
@@ -78,3 +78,19 @@ mysqlbinlog master.000001  --start-position=2738 --stop-position=2973 | mysql -h
 
 语句更新时候还会生成undo log(回滚日志),回滚日志在事务回滚的时候可以将修改的值恢复到事务前的状态.
 
+#### 临时表特点
+
++ 一个临时表只能被创建它的 session 访问，对其他线程不可见。
++ 临时表可以与普通表同名。
++ 同一会话内有同名的临时表和普通表的时候，show create 语句，以及增删改查语句访问的是临时表。
++ show tables 命令不显示临时表。
++ 临时表只能被创建它的 session 访问，所以在这个 session 结束的时候，会自动删除临时表。
+
+#### 分区表
+
+分区表是针对引擎的,因此对server层来说多个分区也只有一张表,而对引擎来说是像多张表一样.
+
+缺点
+
++ 第一次访问分区表的某个表时需访问所有的分区表
++ 所有分区共享一个MDL锁,如针对某分区执行DDL时,会因其它分区的查询语句而需等待MDL锁

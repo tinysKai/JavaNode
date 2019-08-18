@@ -141,3 +141,29 @@ B中执行insert时会等待A中的间隙锁,而A中执行insert时也需等待B
 
 1. 把表 t1 的数据读入线程内存 join_buffer 中，由于我们这个语句中写的是 select *，因此是把整个表 t1 放入了内存；
 2. 扫描表 t2，把表 t2 中的每一行取出来，跟 join_buffer 中的数据做对比，满足 join 条件的，作为结果集的一部分返回。
+
+#### union与union all的区别
+
++ union会去重,而`union all`不去重
++ union由于要去重所以用到了内部临时表(explain下在extra会有`Using temporary`)
+
+#### 自增主键不连续的原因
+
+innodb的自增值在mysql 8.0前是保存在内存里的,直到mysql 8.0才将其持久化.因此mysql重启后读的自增值是计算表里面id的最大值加上步长的.innodb出于性能考虑,在唯一索引冲突以及事务回滚时不回退自增id,因此只保证了自增id是递增的,但不保证是连续的.以下是出现不连续的情况 : 
+
++ insert数据时唯一索引冲突,自增值是不回滚的
++ 事务回滚时,自增值也是不回滚的
++ mysql重启后手动删除最大id的记录是能重复创建两条一样主键的记录的
++ 批量插入数据时,mysql自增申请的策略是指数增长的,如1,2,4每次按照这个数量递增申请的,那最后浪费掉的主键id也会造成不连续
+
+
+
+#### insert into … on duplicate key update
+
+`insert into … on duplicate key update` 这个语义的逻辑是，插入一行数据，如果碰到唯一键约束，就执行后面的更新语句。
+
+针对表 t (唯一索引在c列)里面已经有了 (1,1,1) 和 (2,2,2) 这两行执行以下更新 : 
+
+![](http://ww1.sinaimg.cn/large/8bb38904ly1g5yc436igjj20lb06e74t.jpg)
+
+需要注意的是，执行这条语句的 affected rows 返回的是 2，很容易造成误解。实际上，真正更新的只有一行，只是在代码实现上，insert 和 update 都认为自己成功了，update 计数加了 1， insert 计数也加了 1。

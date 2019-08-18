@@ -31,7 +31,7 @@ Online DDL的过程是这样的：
 4. 升级成MDL写锁
 5. 释放MDL锁
 
-![ehOoQO.png](https://s2.ax1x.com/2019/08/06/ehOoQO.png)
+![https://s2.ax1x.com/2019/08/06/ehOoQO.png](http://ww1.sinaimg.cn/large/8bb38904gy1g62cz10hxuj20sx0dsagu.jpg)
 
 #### 行锁
 
