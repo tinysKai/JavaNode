@@ -26,7 +26,7 @@ mysql> select d.* from tradelog l, trade_detail d
 
 explain后,tradelog为驱动表,trade_detail为被驱动表,并且被驱动关联上用不到索引(两个表的traceid都建了索引的).其查询的过程是先到tradelog表查询一条条记录的traceid,再到trade_detail查询明细.
 
-![eblbH1.png](https://s2.ax1x.com/2019/08/09/eblbH1.png)
+![eblbH1.png](http://ww1.sinaimg.cn/large/8bb38904ly1g65dz123fjj213804r3z5.jpg)
 
 在到trade_detail表根据traceid去查询记录时,本应该是能用到索引的,但此时用不上,经常发生的场景是两个表的字符集不同,此案例的trade_detail表为`utf8`,而tradelog表为`utf8mb4`
 
@@ -38,11 +38,11 @@ mysql> select * from t where id=1;
 
 针对sql语句慢的问题,我们可以先使用`show processlist`来查看具体的执行语句,观察可得查询语句在等到MDL锁.所以我们可以排查下是谁持有MDL写锁而长时间不释放,然后将其kill掉.
 
-![ebBiQI.png](https://s2.ax1x.com/2019/08/09/ebBiQI.png)
+![https://s2.ax1x.com/2019/08/09/ebBiQI.png](http://ww1.sinaimg.cn/large/8bb38904ly1g65dzyga2oj210g05xt9l.jpg)
 
 可在MySQL 启动时设置 performance_schema=on来排查，相比于设置为 off 会有 10% 左右的性能损失.通过查询 `sys.schema_table_lock_waits` 这张表，我们就可以直接找出造成阻塞的 process id，把这个连接用 kill 命令断开即可。
 
-![ebBh6I.png](https://s2.ax1x.com/2019/08/09/ebBh6I.png)
+![https://s2.ax1x.com/2019/08/09/ebBh6I.png](http://ww1.sinaimg.cn/large/8bb38904ly1g65e0ujpsfj20q406z74h.jpg)
 
 #### 解决行锁冲突步骤
 
@@ -52,7 +52,7 @@ mysql> select * from t sys.innodb_lock_waits
 		locked_table=`'${database}'.'${table}'`\G
 ```
 
-![ebWQ4x.png](https://s2.ax1x.com/2019/08/09/ebWQ4x.png)
+![https://s2.ax1x.com/2019/08/09/ebWQ4x.png](http://ww1.sinaimg.cn/large/8bb38904ly1g65e1huop2j20o00iln0e.jpg)
 
 #### 一个有趣的查询
 
@@ -96,7 +96,7 @@ insert into t values(0,0,0),(5,5,5),(10,10,10),(15,15,15),(20,20,20),(25,25,25);
 
 ```
 
-![eqpi38.png](https://s2.ax1x.com/2019/08/09/eqpi38.png)
+![https://s2.ax1x.com/2019/08/09/eqpi38.png](http://ww1.sinaimg.cn/large/8bb38904ly1g65e2c641fj20q80a0wfb.jpg)
 
 由于木有`id = 9`的记录,A会加上间隙锁(5,10],而B同理也会加上(5,10]的间隙锁.
 
