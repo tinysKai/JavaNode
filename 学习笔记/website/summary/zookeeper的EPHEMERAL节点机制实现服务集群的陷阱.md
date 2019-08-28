@@ -1,0 +1,68 @@
+## zookeeper的EPHEMERAL节点机制实现服务集群的陷阱
+
+### 临时节点的坑
+
+#### 1、不处理zk的连接状态变化事件导致zk客户端断开后与zk服务器集群没有重连。后果：连接丢失后EPHEMERAL节点会删除并且客户端watch丢失。
+
+此坑不深，稍微注意一下还是容易发现的，并且采用Curator会减少此类问题的发生，不是完全避免，具体见第6个坑。
+
+zk客户端如果和某台zk服务器断开，会主动尝试与zk集群中其他服务器重新连接，直到sessiontimeout，需要考虑极端的情况下出现sessiontimeout的处理。
+zk客户端和zk服务器断开时会收到state为Disconnected的连接事件，此事件一般可以不处理，此事件后续会跟Expired状态的连接事件或者synconnected状态的连接事件。
+zk客户端连接重试失败并且达到sessiontimeout时间则会收到Expired状态的连接事件，在此事件中应该由应用程序重试建立zk客户端。
+
+#### 2、在synconnected事件中创建EPHEMERAL节点没有判断此节点是否已经存在，在已经存在的情况下没有判断是否应该删除重建，后果：EPHEMERAL节点丢失导致可用的服务器不在可用服务器列表中。
+
+此坑是个深坑，很隐蔽，而且没看到文章来提醒此坑。一般也不会出现问题，除非服务异常终止后立即重启。
+
+一般我们会synconnected状态的连接事件中创建EPHEMERAL节点，注册watch。
+synconnected状态的连接事件中处理EPHEMERAL节点可以分三种场景：
+1、在第一次连接建立时
+2、在断开连接后，sessiontimeout以前客户端自动重连成功
+3、老的客户端没有正常调用close进行关闭，并且在此客户端sessiontimeout以前，创建了一个新的客户端
+先说明一下第3种场景，session是否过期是由server判断的，如果客户不是调用close来和服务器主动断开，服务端会等客户端重连，直到session timeout。因此可能出现老session未过期，新客户端来建新session的情况。
+
+在第2和第3种场景下，EPHEMERAL节点都会在服务端存在。
+第3种场景下，随着残留在zk服务端session的timeout，老的EPHEMERAL节点会被自动删除。
+由于zk的每个session都产生一个新的sessionId，为了区分第2、3种场景，必须在每次synconnected状态的连接事件中比较当前sessionId和上次sessionId。
+在synconnected状态的连接事件中要同时判断sessionId是否变化以及EPHEMERAL节点是否已经存在。
+对sessionId发生了变化且EPHEMERAL节点已经存在的情况要先删除后重建，这个是使用Curator也避免不了的。
+
+#### 3、应用程序关闭时不主动关闭zk客户端，后果：导致可用服务器列表包含已经失效的服务器。
+
+原因同第2条，会导致EPHEMERAL节点在sessiontimeout之前都存在。
+如果sessiontimeout时间很长的话，会导致整个集群的可用服务列表长时间包含已关闭的服务器。
+
+#### 4、创建一个zk客户端时，zk客户端连接zk服务器是异步的，如果在连接还没有建立时就调用zk客户端会抛异常。
+
+正确的做法是在synconnected状态的连接事件中进行连接后的处理或者阻塞线程在连接事件中通知取消阻塞。
+Curator提供了连接时同步阻塞的功能，可以避免此问题。
+
+#### 5、在zk的事件中执行长时间的业务
+
+所有的zk事件都在EventThread中按顺序执行，如果一个事件长时间执行会导致其他事件无法及时响应。
+
+#### 6、使用2.X版本的Curator时，ExponentialBackoffRetry的maxRetries参数设置的再大都会被限制到29：MAX_RETRIES_LIMIT。
+
+这个坑真不知道Curator是怎么想的，文档里一般也没提到这个坑。重试次数不够导致机房断网测试时zk的客户端可能永久丢失连接，据说新版本里已经增加了ForeverRetry。最后我放弃了Curator回到原生zk客户端。
+
+### 关键概念
+
+1. zk内部两个后台线程：IO和心跳线程（SendThread），事件处理线程（EventThread），均为单线程，且互相独立。所以eventthread堵塞，不会导致心跳超时；另外由于event thread单线程，如果在process过程中堵塞，其他事件即使发生了，也只会放到本地队列中，暂时不会执行。
+2. 如果client与zkserver连接中断，client的sendthread会使用原来的sessionid一直尝试重连，连上后server判断该sessionid是否已经过期，如果未过期，则SyncConnected会通知给client，同时期间的watcher事件也会通知给client，不会丢失；如果已过期，则client会收到到Expired状态的连接事件，sendthread, eventthread都退出，当前client失效。
+3. session是否过期是由server判断的；如果过期了则client使用原来的sessionid连接进来时，会收到expired状态的连接事件。由server来判断session是否过期主要是因为server需要清理该session相关的emphemeral节点并且通知其他客户端；如果由client判断再通知server，在client被直接kill掉的情况下，client创建的临时节点就清理不掉了；如果client和server各自判断，会有同步问题。
+4. 一个zk客户端连接断开后只要在session超时期限内重连成功，session会保持。
+5. 注册的watch事件和EPHEMERAL临时节点和session关联和连接没有关系。
+6. 客户端连接没有close就断开，服务端session仍然存活直到session超时。
+
+### 原生zk客户端的连接事件里面几个关键状态
+
+- SyncConnected 连接成功和重连成功时触发
+- Disconnected 连接断开时触发
+- Expired session过期时触发
+
+### Curator的连接事件里面几个关键状态
+
+- CONNECTED 第一次连接
+- SUSPENDED 对应原生的Disconnected
+- LOST 对应原生的Expired
+- RECONNECTED 包括sessionid不变的重连和sessionid变化的重连，如果客户端建立了EPHEMERAL节点,必须在此事件中判断sessionId。对应sessionId不变的情况，连接断开期间watch的事件不会丢失，如果sessionId变化，则期间watch的事件会丢失。

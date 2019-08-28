@@ -140,7 +140,7 @@ ZooKeeper声明对一个会话中所有客户端操作提供顺序性的保障�
 + 多线程提交同步操作时可能因线程调度原因破坏了顺序性
 + 同步与异步混用,如先后发现了两个Aask1,Aask2的异步请求,但在接收到Aask1未收到Aask2的回调时,在Aask1的回调中调用同步请求Sask,则异步回调Aask2需等待同步调用处理完毕后才能收到响应
 
-#### 常用配置
+### 常用配置
 
 *ticketTime*
 
@@ -171,3 +171,84 @@ tick的时长单位为毫秒，tick为ZooKeeper使用的基本的时间度量单
 服务器x的配置参数。其中hostname为服务器在网络n中的名称，同时后面跟了两个TCP的端口号，第一个端口用于事务的发送，第二个端口用于群首选举，典型的端口号配置为2888：3888。如果最后一个字段标记了observer属性，服务器就会进入观察者模式。
 
 注意，所有的服务器使用相同的server.x配置信息，这一点非常重要，否则的话，因服务器之间可能无法正确建立连接而导致整个集群无法正常工作。
+
+### 动态扩容
+
+#### 背景
+
+若直接进行扩容或者缩容,由于集群中是用多数原则选主的,因此是有可能在扩容过程中丢失事件的.如集群A(1,5),B(1,5),C(1,3).括号第一位表示时间,第二位表示事务数.若此时打算扩容加入D(1,0),E(1,0),则集群的仲裁数为3.若D,E加入期间,A和B恰好由于网络问题无法发送心跳,则集群由C,D,E组成,并且此时C成为leader,当前最新事务为(1,3).当A,B由于网络问题重新连接上集群时,将接收leaderC的指令丢失原本的(1,3)后的消息并开始同步后面的消息.
+
+**基于此zk 3.5.0+ 开始支持动态配置，能够动态更新配置文件，实现扩容。 reconfig，重配置。**
+
+#### 配置文件
+
+```properties
+# 原本的配置文件
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=./data
+dataLogDir=./txnlog
+clientPort=2182
+server.1=127.0.0.1:2222:2223
+server.2=127.0.0.1:3333:3334
+server.3=127.0.0.1:4444:4445
+
+# 可支持动态扩容的配置文件
+tickTime=2000
+initLimit=10
+syncLimit=5
+dataDir=./data
+dataLogDir=./txnlog
+#新增指向支持动态扩容的文件
+dynamicConfigFile=./dyn.cfg 
+
+```
+
+#### dyn文件
+
+```properties
+# server.id=host:n:n[:role];[client_address:]client_port
+# role表示角色,有participant或observer选项,默认为participant
+# client_port表示客户端连接的服务器端口号
+
+server.1=127.0.0.1:2222:2223:participant;2181
+server.2=127.0.0.1:3333:3334:participant;2182
+server.3=127.0.0.1:4444:4445:participant;2183
+```
+
+#### 更新
+
+一旦这些文件就绪，我们就可以通过reconfig操作来重新配置一个集群，该操作可以增量或全量（整体）地进行更新操作。
+
+```shell
+reconfig -remove 2,3 -add \
+  server.4=127.0.0.1:5555:5556:participant;2184,\
+  server.5=127.0.0.1:6666:6667:participant;2185
+```
+
+#### 注意事项
+
+重配置只能用于集群模式,不能用于独裁模式
+
+### 日志
+
+快照文件将会被写入到DataDir参数所指定的目录中，而事务日志文件将会被写入到DataLogDir参数所指定的目录中。
+
+#### 日志翻译
+
+事务日志
+
+```shell
+java -cp ${zk_lib} org.apache.zookeeper.server.LogFormatter version-2/log.62
+
+java LogFormatter log.62
+```
+
+快照翻译
+
+```shell
+java -cp ${ZK_LIBS} org.apache.zookeeper.server.SnapshotFormatter version-2 /snapshot.100000009
+
+```
+

@@ -60,6 +60,59 @@ public void createPathData(String path, Object obj, CreateMode createModel) thro
     }
 }
 
+//写一个永久的临时节点,会覆盖原有节点,因使用了会话来判断
+public void createNode(String path, Object data) throws UdpException {
+    try {
+        byte[] byteData = data instanceof String ? ((String) data).getBytes() : objMapper.writeValueAsBytes(data);
+
+        Stat pathStat = zk.checkExists().forPath(path);
+
+        //判断会话id是否相同
+        /**
+         * 这里不判断的话,会可能是上一个客户端创建的临时节点
+         * 而上一个客户端没显示调用close方法而且也还没达到其超时时间,此时会话还没失效,临时节点也存在
+         * 当其超时时,临时节点会丢失,而此时会影响到监听此节点的状态的判断,会认为创建此节点的服务器挂了
+        */
+        long sessionId = zk.getZookeeperClient().getZooKeeper().getSessionId();
+        if (pathStat != null) {
+            if (sessionId != pathStat.getEphemeralOwner()) {
+                logger.info("[Delete for previous seesion Ephemeral node][Path:" + path + "]");
+                zk.delete().forPath(path);
+            }
+        }
+
+        logger.info("[Create for current session Ephemeral File][Path:" + path + "]");
+        //永久临时节点不会因网络抖动而丢失,主要是针对 ConnectionState.RECONNECTED状态来进行重新创建
+        /**
+         * 通过以下方式来进行网络重连时的重新创建节点
+         *   client.getConnectionStateListenable().addListener(connectionStateListener);
+               private final ConnectionStateListener connectionStateListener = new ConnectionStateListener()
+                    {
+                        @Override
+                        public void stateChanged(CuratorFramework client, ConnectionState newState)
+                        {
+                            if ( newState == ConnectionState.RECONNECTED )
+                            {
+                                createNode();
+                            }
+                        }
+                    };
+        
+        */
+        PersistentEphemeralNode node = 
+            new PersistentEphemeralNode(zk, 
+                                        PersistentEphemeralNode.Mode.EPHEMERAL,
+                                        path,
+                                        byteData);
+        node.start();
+
+    } catch (Exception e) {
+        e.getStackTrace();
+        throw new UdpException(e);
+    }
+}
+
+
 //删除节点
 public void removeNode(String path) {
     try {
