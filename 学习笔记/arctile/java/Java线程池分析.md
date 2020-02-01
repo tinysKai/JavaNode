@@ -236,7 +236,7 @@ ThreadPoolExecutor  exec =
 
 #### CTL状态变量解释
 
-![https://s2.ax1x.com/2019/05/12/E4iEa8.png](https://ws3.sinaimg.cn/large/005BYqpggy1g2yvb7i6qjj30hv0lg403.jpg)
+![https://s2.ax1x.com/2019/05/12/E4iEa8.png](http://ww1.sinaimg.cn/large/8bb38904gy1gb94z8e1zvj20hv0lg403.jpg)
 
 #### Worker类分析
 

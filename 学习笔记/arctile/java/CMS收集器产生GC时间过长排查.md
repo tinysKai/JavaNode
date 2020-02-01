@@ -36,7 +36,7 @@
 -XX:AutoBoxCacheMax=20000  //自动装箱的范围到20000
 -XX:+PrintCommandLineFlags //这个参数的作用是显示出JVM初始化完毕后所有跟最初的默认值不同的参数及它们的值
 -Djava.net.preferIPv4Stack=true  //禁用IPV6
--XX:MaxDirectMemorySize  //设置堆外内存,永久区的大小
+-XX:MaxDirectMemorySize  //设置堆外内存
 -XX:+PrintPromotionFailure //能得到多大的新生代对象晋升到老生代失败从而引发Full GC的
 -XX:CMSInitiatingOccupancyFraction=75 -XX:+UseCMSInitiatingOccupancyOnly //老年代达到75%时即触发CMS回收老年代,这两个参数需一起用才生效
 -XX:MaxTenuringThreshold=4 //对象经过多少次young gc后晋升老年代
