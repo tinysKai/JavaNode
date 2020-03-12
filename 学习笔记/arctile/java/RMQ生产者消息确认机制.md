@@ -11,8 +11,12 @@
 因此,需保证消息可达需让消息到达exchange而且能路由到queue,而RMQ的生产者api是没保证消息可达的,因此需使用以下方式来确保
 
 1. 通过AMQP提供的事务机制实现；
+
 2. 使用发送者确认模式实现；
-3. Callback方式来弥补
+
+   
+
+   
 
 #### 使用事务
 
@@ -97,7 +101,7 @@ channel.waitForConfirmsOrDie(); //直到所有信息都发布，只要有一个�
 System.out.println("全部执行完成");
 ```
 
-方式三 - 异步conform模式
+**方式三 - 异步conform模式**
 
 ```java
 ConnectionFactory factory = new ConnectionFactory();
@@ -125,7 +129,9 @@ channel.addConfirmListener(new ConfirmListener() {
 });
 ```
 
-#### Callback方式
+
+
+#### 基于Spring template的Callback方式
 
 RMQ主要有两个针对发送消息后的回调接口`ConfirmCallback`和`ReturnCallback`两个接口
 
